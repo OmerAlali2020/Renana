@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מידע חשוב לרננה</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --alert-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-box {
+            background-color: #fff5f5;
+            border: 1px solid var(--alert-color);
+            border-right: 5px solid var(--alert-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .contact-list, .schedule-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-list li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .contact-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .time-slot {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: baseline;
+        }
+
+        .time {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 60px;
+        }
+
+        .step-number {
+            background: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>מידע חשוב לרננה ✈️</h1>
+        <p class="intro">תודה שאת באה לשמור על הילדים! הנה כל מה שצריך לדעת.</p>
+    </header>
+
+    <div class="card">
+        <h2>📞 אנשי קשר לחירום ומנהלות</h2>
+        <ul class="contact-list">
+            <li><strong>הורים (אנחנו):</strong> זמינים בוואטסאפ</li>
+            <li><strong>שכנה (נורדן):</strong> צד ימין - אפשר לפנות אם צריך משהו</li>
+            <li><strong>גן של ארבל:</strong> <a href="tel:039088658">03-9088658</a> | גננת לידור: <a href="tel:0525433591">052-5433591</a></li>
+            <li><strong>בי"ס מורשה (ראם):</strong> מזכירות: <a href="tel:039324089">03-9324089</a> | מורה שירן: <a href="tel:0504301646">050-4301646</a></li>
+            <li><strong>גן של רווה (מעיין):</strong> <a href="tel:0532275788">053-2275788</a></li>
+        </ul>
+        <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 10px;">
+            <p>🔑 <strong>מפתחות לבית:</strong> סט בארון חשמל + סט אצל השכנים (קוד בניין: 2404*)</p>
+            <p>🚗 <strong>רכב:</strong> מפתח בבית | קוד לרכב: <strong>3342</strong></p>
+        </div>
+    </div>
+
+    <div class="card" style="border-right: 5px solid var(--alert-color);">
+        <h2 style="color: var(--alert-color);">💊 דגש רפואי חשוב (רווה)</h2>
+        <p><strong>רווה מקבל אנטיביוטיקה פעמיים ביום (בוקר וערב).</strong></p>
+        <ul>
+            <li>מינון: <strong>8cc</strong> במזרק.</li>
+            <li>⚠️ לא לשכוח לתת לפני היציאה בבוקר ובערב לפני השינה!</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>☀️ סדר בוקר (יציאה: 07:30-07:40)</h2>
+        <div class="time-slot">
+            <span class="time">07:00</span>
+            <span>השכמה (כדאי להעיר קצת קודם למנוע לחץ).</span>
+        </div>
+        <div class="time-slot">
+            <span class="time">אוכל</span>
+            <span>משהו קליל (עוגייה) לפני היציאה.</span>
+        </div>
+        <div class="time-slot">
+            <span class="time">הלבשה</span>
+            <span>
+                <div>👦 <strong>ראם:</strong> מתלבש לבד.</div>
+                <div>👶 <strong>ארבל ורווה:</strong> צריכים עזרה מלאה.</div>
+            </span>
+        </div>
+        <div class="time-slot">
+            <span class="time">תיקים</span>
+            <span>
+                <div>🥯 <strong>ראם:</strong> קופסת אוכל + תיק בי"ס.</div>
+                <div>💧 <strong>ארבל:</strong> בקבוק מים בתוך תיק.</div>
+                <div>❌ <strong>רווה:</strong> לא צריך כלום.</div>
+            </span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🚗 פיזור (סדר: ראם ⬅️ רווה ⬅️ ארבל)</h2>
+        <ol>
+            <li>
+                <strong>תחנה 1: ראם (בי"ס "מור")</strong><br>
+                להיות שם ב-08:00. מורידים בחניה, הוא עולה לבד.
+            </li>
+            <li>
+                <strong>תחנה 2: רווה (גן "אתי")</strong><br>
+                קוד לגן: <strong>#9999</strong> (אפשר להגיע אחרי 08:00).
+            </li>
+            <li>
+                <strong>תחנה 3: ארבל (גן "אחלמה")</strong><br>
+                קוד לגן: <strong>#7474</strong> (הורדה אחרונה כדי לא להוציא את רווה מהרכב).
+            </li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>🚙 איסוף אחה"צ (ימים ד', ה')</h2>
+        <p><em>המלצה: לצאת לאסוף באזור 16:00. סדר: ארבל ⬅️ רווה ⬅️ ראם.</em></p>
+        <ul class="schedule-list">
+            <li><span class="step-number">1</span> <strong>ארבל:</strong> עד 16:45 (עדיף להקדים ל-16:00).</li>
+            <li><span class="step-number">2</span> <strong>רווה:</strong> מסיים עד 16:30.</li>
+            <li><span class="step-number">3</span> <strong>ראם:</strong> מסיים עד 16:45. <br>
+                <small>📞 להתקשר לצהרון והם מוציאים אותו. עדי: <a href="tel:0504245385">050-424-5385</a></small>
+            </li>
+        </ul>
+        <hr>
+        <p><strong>📅 יום שישי:</strong> ארבל (12:30), רווה (12:00), ראם (11:40).</p>
+    </div>
+
+    <div class="card">
+        <h2>🏠 שגרת ערב</h2>
+        <ul>
+            <li>🎮 <strong>אחה"צ:</strong> זמן חופשי, משחקים, טלוויזיה.</li>
+            <li>🍕 <strong>18:30 ארוחת ערב:</strong> פיצות/שניצלונים מהמקפיא.</li>
+            <li>🚿 <strong>מקלחות:</strong> אחרי האוכל.</li>
+            <li>😴 <strong>שינה:</strong> כולם ישנים יחד בחדר של ראם וארבל.</li>
+        </ul>
+    </div>
+    
+     <div class="card">
+        <h2>🎒 לשבת (4.1)</h2>
+        <p>הכנו מזוודה מסודרת עם כל מה שצריך לילדים.</p>
+    </div>
+
+    <div class="footer">
+        נסיעה טובה ובהצלחה! ❤️
+    </div>
+</div>
+
+</body>
+</html>
