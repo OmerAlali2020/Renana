@@ -120,6 +120,19 @@
             margin-left: 10px;
         }
 
+        /* --- תוספת לעיצוב התמונות --- */
+        .location-image {
+            width: 100%;
+            height: 200px; /* גובה אחיד */
+            object-fit: cover; /* חיתוך יפה של התמונה */
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #e0e0e0;
+            background-color: #f0f0f0; /* צבע רקע אם אין תמונה */
+            display: block;
+        }
+        /* -------------------------- */
+
         a {
             color: var(--primary-color);
             text-decoration: none;
@@ -197,16 +210,19 @@
         <h2>🚗 פיזור (סדר: ראם ⬅️ רווה ⬅️ ארבל)</h2>
         <ol>
             <li>
-                <strong>תחנה 1: ראם (בי"ס "מור")</strong><br>
+                <strong>תחנה 1: ראם (בי"ס "מורשה")</strong><br>
                 להיות שם ב-08:00. מורידים בחניה, הוא עולה לבד.
+                <img src="raam.jpg" alt="תמונה של ביס מורשה" class="location-image" onerror="this.style.display='none'">
             </li>
-            <li>
+            <li style="margin-top: 15px;">
                 <strong>תחנה 2: רווה (גן "אתי")</strong><br>
                 קוד לגן: <strong>#9999</strong> (אפשר להגיע אחרי 08:00).
+                <img src="raveh.jpg" alt="תמונה של גן אתי" class="location-image" onerror="this.style.display='none'">
             </li>
-            <li>
+            <li style="margin-top: 15px;">
                 <strong>תחנה 3: ארבל (גן "אחלמה")</strong><br>
                 קוד לגן: <strong>#7474</strong> (הורדה אחרונה כדי לא להוציא את רווה מהרכב).
+                <img src="arbel.jpg" alt="תמונה של גן אחלמה" class="location-image" onerror="this.style.display='none'">
             </li>
         </ol>
     </div>
@@ -218,7 +234,8 @@
             <li><span class="step-number">1</span> <strong>ארבל:</strong> עד 16:45 (עדיף להקדים ל-16:00).</li>
             <li><span class="step-number">2</span> <strong>רווה:</strong> מסיים עד 16:30.</li>
             <li><span class="step-number">3</span> <strong>ראם:</strong> מסיים עד 16:45. <br>
-                <small>📞 להתקשר לצהרון והם מוציאים אותו. עדי: <a href="tel:0504245385">050-424-5385</a></small>
+                <small>📞 להתקשר לצהרון והם מוציאים אותו.<br>
+                עדי: <a href="tel:0504245385">050-424-5385</a> | אורלי: <a href="tel:0509055501">050-905-5501</a></small>
             </li>
         </ul>
         <hr>
