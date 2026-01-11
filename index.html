@@ -3,264 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מידע חשוב לרננה</title>
+    <title>Allied Group - Operational Brain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #4a90e2;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --alert-color: #e74c3c;
-            --success-color: #2ecc71;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .intro {
-            font-size: 1.1em;
-            color: #666;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .card h2 {
-            margin-top: 0;
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 10px;
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert-box {
-            background-color: #fff5f5;
-            border: 1px solid var(--alert-color);
-            border-right: 5px solid var(--alert-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .contact-list, .schedule-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .contact-list li {
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #eee;
-        }
-        
-        .contact-list li:last-child {
-            border-bottom: none;
-        }
-
-        .tag {
-            display: inline-block;
-            background: #eee;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin-left: 5px;
-            font-weight: bold;
-        }
-
-        .time-slot {
-            display: flex;
-            margin-bottom: 10px;
-            align-items: baseline;
-        }
-
-        .time {
-            font-weight: bold;
-            color: var(--primary-color);
-            min-width: 60px;
-        }
-
-        .step-number {
-            background: var(--primary-color);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-
-        /* --- תוספת לעיצוב התמונות --- */
-        .location-image {
-            width: 100%;
-            height: 200px; /* גובה אחיד */
-            object-fit: cover; /* חיתוך יפה של התמונה */
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid #e0e0e0;
-            background-color: #f0f0f0; /* צבע רקע אם אין תמונה */
-            display: block;
-        }
-        /* -------------------------- */
-
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #888;
-            font-size: 0.9em;
-        }
+        body { font-family: 'Heebo', sans-serif; background-color: #0f172a; color: white; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .glow-text { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body class="h-screen flex flex-col overflow-hidden">
 
-<div class="container">
-    <header>
-        <h1>מידע חשוב לרננה ✈️</h1>
-        <p class="intro">תודה שאת באה לשמור על הילדים! הנה כל מה שצריך לדעת.</p>
+    <header class="h-20 border-b border-slate-700 bg-slate-900 flex items-center justify-between px-8 z-20">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <i data-lucide="activity" class="text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide text-white">Allied <span class="text-blue-400 font-light">Brain</span></h1>
+                <div class="text-xs text-slate-400">Operational Command Center</div>
+            </div>
+        </div>
+
+        <div class="flex gap-8">
+            <div class="text-center">
+                <div class="text-xs text-slate-500 uppercase tracking-wider">חיסכון מצטבר (Q1)</div>
+                <div class="text-2xl font-bold text-green-400 glow-text" id="total-savings">₪4,250,000</div>
+            </div>
+            <div class="text-center border-r border-slate-700 pr-8">
+                <div class="text-xs text-slate-500 uppercase tracking-wider">החלטות אוטונומיות</div>
+                <div class="text-2xl font-bold text-white">12,405</div>
+            </div>
+            <div class="text-center border-r border-slate-700 pr-8">
+                <div class="text-xs text-slate-500 uppercase tracking-wider">חריגים פתוחים</div>
+                <div class="text-2xl font-bold text-red-500 animate-pulse">3</div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <div class="text-sm font-bold">מנכ"ל הקבוצה</div>
+                <div class="text-xs text-slate-400">Admin Access</div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-slate-700 border border-slate-500 overflow-hidden">
+                <img src="https://ui-avatars.com/api/?name=CEO&background=random" alt="Avatar">
+            </div>
+        </div>
     </header>
 
-    <div class="card">
-        <h2>📞 אנשי קשר לחירום ומנהלות</h2>
-        <ul class="contact-list">
-            <li><strong>הורים (אנחנו):</strong> זמינים בוואטסאפ</li>
-            <li><strong>שכנה (נורדן):</strong> צד ימין - אפשר לפנות אם צריך משהו</li>
-            <li><strong>גן של ארבל:</strong> <a href="tel:039088658">03-9088658</a> | גננת לידור: <a href="tel:0525433591">052-5433591</a></li>
-            <li><strong>בי"ס מורשה (ראם):</strong> מזכירות: <a href="tel:039324089">03-9324089</a> | מורה שירן: <a href="tel:0504301646">050-4301646</a></li>
-            <li><strong>גן של רווה (מעיין):</strong> <a href="tel:0532275788">053-2275788</a></li>
-        </ul>
-        <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 10px;">
-            <p>🔑 <strong>מפתחות לבית:</strong> סט בארון חשמל + סט אצל השכנים (קוד בניין: 2404*)</p>
-            <p>🚗 <strong>רכב:</strong> מפתח בבית | קוד לרכב: <strong>3342</strong></p>
+    <div class="flex-1 flex overflow-hidden">
+        
+        <div class="w-72 bg-slate-900 border-l border-slate-800 flex flex-col p-4 gap-4">
+            <div class="text-xs font-bold text-slate-500 uppercase px-2">חברות הפורטפוליו</div>
+            
+            <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-yellow-600 transition group">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-yellow-500">UPS Israel</span>
+                    <span class="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full">1 חריג</span>
+                </div>
+                <div class="text-xs text-slate-400 group-hover:text-white transition">צוואר בקבוק במכס נתב"ג</div>
+                <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                    <div class="bg-yellow-600 h-full w-3/4"></div>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-blue-600 transition group">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-blue-400">Champion Motors</span>
+                    <span class="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full">2 חריגים</span>
+                </div>
+                <div class="text-xs text-slate-400 group-hover:text-white transition">חריגות הטסת חלפים (גרמניה)</div>
+                <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                    <div class="bg-blue-600 h-full w-1/2"></div>
+                </div>
+            </div>
+
+             <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-purple-600 transition group opacity-60">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-purple-400">Newpan</span>
+                    <span class="text-green-400 text-xs">✔ הכל תקין</span>
+                </div>
+                <div class="text-xs text-slate-400">אין חריגות שירות</div>
+            </div>
         </div>
-    </div>
 
-    <div class="card" style="border-right: 5px solid var(--alert-color);">
-        <h2 style="color: var(--alert-color);">💊 דגש רפואי חשוב (רווה)</h2>
-        <p><strong>רווה מקבל אנטיביוטיקה פעמיים ביום (בוקר וערב).</strong></p>
-        <ul>
-            <li>מינון: <strong>8cc</strong> במזרק.</li>
-            <li>⚠️ לא לשכוח לתת לפני היציאה בבוקר ובערב לפני השינה!</li>
-        </ul>
-    </div>
+        <div class="flex-1 bg-slate-950 p-8 overflow-y-auto relative">
+            
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="zap" class="text-yellow-400"></i>
+                    זרם החלטות חי (Live Decision Stream)
+                </h2>
 
-    <div class="card">
-        <h2>☀️ סדר בוקר (יציאה: 07:30-07:40)</h2>
-        <div class="time-slot">
-            <span class="time">07:00</span>
-            <span>השכמה (כדאי להעיר קצת קודם למנוע לחץ).</span>
+                <div id="card-champion" class="glass-panel rounded-2xl p-6 mb-6 animate-fade-in relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-1 h-full bg-blue-600"></div>
+                    
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-blue-900/50 p-2 rounded-lg text-blue-400">
+                                <i data-lucide="plane"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">בקשת הטסה דחופה: מנוע TSI 2.0</h3>
+                                <div class="text-sm text-slate-400 flex items-center gap-2">
+                                    <span>Champion Motors</span> • <span>מוסך "המרכז"</span> • <span>לפני 12 דקות</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white">€850</div>
+                            <div class="text-xs text-red-400">עלות הטסה משוערת</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-2">ניתוח המערכת</div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center gap-2 text-sm text-red-300">
+                                <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                רכב אינו מושבת (נוסע)
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-green-400">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                קיים במלאי ימי (מגיע בעוד 3 ימים)
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-300 col-span-2">
+                                <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+                                לקוח פרטי (לא ציי רכב) - אין התחייבות SLA להטסה
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="resolveIssue('card-champion', 3200)" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-bold shadow-lg shadow-blue-900/20 transition flex items-center justify-center gap-2">
+                            <span>חסוך עלות וספק ממלאי ימי</span>
+                            <span class="bg-white/20 text-xs px-2 py-0.5 rounded">חיסכון: ₪3,200</span>
+                        </button>
+                        <button class="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-800 text-slate-300">
+                            אשר הטסה בכל זאת
+                        </button>
+                    </div>
+                </div>
+
+
+                <div id="card-ups" class="glass-panel rounded-2xl p-6 mb-6 animate-fade-in relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-1 h-full bg-yellow-600"></div>
+                    
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-yellow-900/30 p-2 rounded-lg text-yellow-500">
+                                <i data-lucide="package"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">חסימת מכס: משלוח אלקטרוניקה</h3>
+                                <div class="text-sm text-slate-400 flex items-center gap-2">
+                                    <span>UPS Israel</span> • <span>מסוף נתב"ג</span> • <span>לפני 4 דקות</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white">48h</div>
+                            <div class="text-xs text-red-400">עיכוב צפוי ללא התערבות</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-2">המלצת עמיל מכס וירטואלי</div>
+                        <p class="text-sm text-slate-300 mb-2">זוהתה אי התאמה בסיווג (H.S Code). המערכת איתרה סיווג היסטורי תקין עבור יבואן זה.</p>
+                        <div class="flex items-center gap-2 bg-green-900/20 p-2 rounded border border-green-900/50 text-green-400 text-sm font-mono">
+                            <i data-lucide="arrow-right"></i> שנה סיווג ל-8517.62 (פטור ממכס)
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="resolveIssue('card-ups', 0)" class="flex-1 bg-yellow-600 hover:bg-yellow-500 text-white py-3 rounded-lg font-bold shadow-lg shadow-yellow-900/20 transition flex items-center justify-center gap-2">
+                            <span>תקן סיווג ושחרר אוטומטית</span>
+                        </button>
+                        <button class="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-800 text-slate-300">
+                            פתח לבדיקה ידנית
+                        </button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="time-slot">
-            <span class="time">אוכל</span>
-            <span>משהו קליל (עוגייה) לפני היציאה.</span>
-        </div>
-        <div class="time-slot">
-            <span class="time">הלבשה</span>
-            <span>
-                <div>👦 <strong>ראם:</strong> מתלבש לבד.</div>
-                <div>👶 <strong>ארבל ורווה:</strong> צריכים עזרה מלאה.</div>
-            </span>
-        </div>
-        <div class="time-slot">
-            <span class="time">תיקים</span>
-            <span>
-                <div>🥯 <strong>ראם:</strong> קופסת אוכל + תיק בי"ס.</div>
-                <div>💧 <strong>ארבל:</strong> בקבוק מים בתוך תיק.</div>
-                <div>❌ <strong>רווה:</strong> לא צריך כלום.</div>
-            </span>
-        </div>
+
     </div>
 
-    <div class="card">
-        <h2>🚗 פיזור (סדר: ראם ⬅️ רווה ⬅️ ארבל)</h2>
-        <ol>
-            <li>
-                <strong>תחנה 1: ראם (בי"ס "מורשה")</strong><br>
-                להיות שם ב-08:00. מורידים בחניה, הוא עולה לבד.
-                <img src="raam.jpg" alt="תמונה של ביס מורשה" class="location-image" onerror="this.style.display='none'">
-            </li>
-            <li style="margin-top: 15px;">
-                <strong>תחנה 2: רווה (גן "אתי")</strong><br>
-                קוד לגן: <strong>#9999</strong> (אפשר להגיע אחרי 08:00).
-                <img src="raveh.jpg" alt="תמונה של גן אתי" class="location-image" onerror="this.style.display='none'">
-            </li>
-            <li style="margin-top: 15px;">
-                <strong>תחנה 3: ארבל (גן "אחלמה")</strong><br>
-                קוד לגן: <strong>#7474</strong> (הורדה אחרונה כדי לא להוציא את רווה מהרכב).
-                <img src="arbel.jpg" alt="תמונה של גן אחלמה" class="location-image" onerror="this.style.display='none'">
-            </li>
-        </ol>
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 opacity-0 transition-opacity duration-500 pointer-events-none">
+        <i data-lucide="check-circle"></i>
+        <span class="font-bold">החיסכון עודכן בהצלחה! הפקודה נשלחה ל-ERP.</span>
     </div>
 
-    <div class="card">
-        <h2>🚙 איסוף אחה"צ (ימים ד', ה')</h2>
-        <p><em>המלצה: לצאת לאסוף באזור 16:00. סדר: ארבל ⬅️ רווה ⬅️ ראם.</em></p>
-        <ul class="schedule-list">
-            <li><span class="step-number">1</span> <strong>ארבל:</strong> עד 16:45 (עדיף להקדים ל-16:00).</li>
-            <li><span class="step-number">2</span> <strong>רווה:</strong> מסיים עד 16:30.</li>
-            <li><span class="step-number">3</span> <strong>ראם:</strong> מסיים עד 16:45. <br>
-                <small>📞 להתקשר לצהרון והם מוציאים אותו.<br>
-                עדי: <a href="tel:0504245385">050-424-5385</a> | אורלי: <a href="tel:0509055501">050-905-5501</a></small>
-            </li>
-        </ul>
-        <hr>
-        <p><strong>📅 יום שישי:</strong> ארבל (12:30), רווה (12:00), ראם (11:40).</p>
-    </div>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
 
-    <div class="card">
-        <h2>🏠 שגרת ערב</h2>
-        <ul>
-            <li>🎮 <strong>אחה"צ:</strong> זמן חופשי, משחקים, טלוויזיה.</li>
-            <li>🍕 <strong>18:30 ארוחת ערב:</strong> פיצות/שניצלונים מהמקפיא.</li>
-            <li>🚿 <strong>מקלחות:</strong> אחרי האוכל.</li>
-            <li>😴 <strong>שינה:</strong> כולם ישנים יחד בחדר של ראם וארבל.</li>
-        </ul>
-    </div>
-    
-     <div class="card">
-        <h2>🎒 לשבת (4.1)</h2>
-        <p>הכנו מזוודה מסודרת עם כל מה שצריך לילדים.</p>
-    </div>
+        // Logic to simulate solving an issue
+        function resolveIssue(cardId, amountSaved) {
+            const card = document.getElementById(cardId);
+            
+            // 1. Animate card away
+            card.style.transform = 'scale(0.95)';
+            card.style.opacity = '0';
+            
+            setTimeout(() => {
+                card.style.display = 'none';
+                
+                // 2. Update Total Savings Counter
+                if(amountSaved > 0) {
+                    const savingsElement = document.getElementById('total-savings');
+                    let currentSavings = parseInt(savingsElement.innerText.replace(/\D/g,''));
+                    let newSavings = currentSavings + amountSaved;
+                    savingsElement.innerText = '₪' + newSavings.toLocaleString();
+                    savingsElement.classList.add('scale-110'); // Pulse effect
+                    setTimeout(() => savingsElement.classList.remove('scale-110'), 200);
+                }
 
-    <div class="footer">
-        נסיעה טובה ובהצלחה! ❤️
-    </div>
-</div>
+                // 3. Show Toast Notification
+                const toast = document.getElementById('toast');
+                toast.classList.remove('opacity-0');
+                setTimeout(() => toast.classList.add('opacity-0'), 3000);
 
+            }, 300);
+        }
+    </script>
 </body>
 </html>
