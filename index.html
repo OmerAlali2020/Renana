@@ -2,233 +2,477 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allied Group - Operational Brain</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>Palantir Foundry Simulation - Supply Chain</title>
     <style>
-        body { font-family: 'Heebo', sans-serif; background-color: #0f172a; color: white; }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .glow-text { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --bg-dark: #10161a;
+            --panel-bg: #202b33;
+            --text-main: #f5f8fa;
+            --text-muted: #a7b6c2;
+            --accent-blue: #2B95D6;
+            --accent-red: #D13913;
+            --accent-green: #0F9960;
+            --border: #30404d;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Consolas', monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation Bar */
+        .top-bar {
+            height: 60px;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .logo span { color: var(--text-muted); font-weight: normal; font-size: 0.9rem;}
+
+        .kpi-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .kpi {
+            text-align: center;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-mono);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .kpi-value.alert { color: var(--accent-red); animation: pulse-text 2s infinite; }
+        .kpi-value.good { color: var(--accent-green); }
+
+        /* Main Content Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Map / Ontology View */
+        .ontology-view {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #1b262e 0%, #10161a 100%);
+            overflow: hidden;
+        }
+
+        .grid-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            width: 140px;
+            background: var(--panel-bg);
+            border: 1px solid var(--accent-blue);
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .node:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(43, 149, 214, 0.4); }
+        .node h4 { margin: 0 0 5px 0; font-size: 0.9rem; }
+        .node p { margin: 0; font-size: 0.75rem; color: var(--text-muted); }
+
+        .node.supplier { top: 40%; left: 10%; border-color: var(--text-muted); }
+        
+        .node.factory-1 { top: 20%; left: 40%; border-color: var(--accent-red); box-shadow: 0 0 20px rgba(209, 57, 19, 0.4); }
+        .node.factory-1.fixed { border-color: var(--accent-green); box-shadow: none; }
+        
+        .node.factory-2 { top: 60%; left: 40%; border-color: var(--text-muted); opacity: 0.6; }
+        .node.factory-2.active { border-color: var(--accent-blue); opacity: 1; box-shadow: 0 0 20px rgba(43, 149, 214, 0.4); }
+
+        .node.customer { top: 40%; left: 70%; border-color: var(--text-muted); }
+
+        /* Status Badge on Node */
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .bg-red { background: rgba(209, 57, 19, 0.2); color: var(--accent-red); }
+        .bg-green { background: rgba(15, 153, 96, 0.2); color: var(--accent-green); }
+        .bg-blue { background: rgba(43, 149, 214, 0.2); color: var(--accent-blue); }
+
+        /* Connections (SVG) */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        line {
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            opacity: 0.3;
+        }
+        line.active-route {
+            stroke: var(--accent-blue);
+            stroke-width: 3;
+            opacity: 0.8;
+            stroke-dasharray: 10;
+            animation: dash 1s linear infinite;
+        }
+        line.problem-route {
+            stroke: var(--accent-red);
+            opacity: 0.8;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+        
+        @keyframes pulse-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Side Panel (AIP) */
+        .side-panel {
+            width: 350px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%); /* Hidden by default */
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 20;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+
+        .side-panel.open {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ai-icon {
+            width: 20px; height: 20px;
+            background: linear-gradient(135deg, #2B95D6, #9D2BD6);
+            border-radius: 50%;
+        }
+
+        .panel-content {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-bubble {
+            background: #293742;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-blue);
+        }
+        
+        .chat-bubble.alert-bubble {
+            border-left: 3px solid var(--accent-red);
+            background: rgba(209, 57, 19, 0.1);
+        }
+
+        .action-card {
+            background: #182026;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #2382bd; }
+        .btn.secondary { background: #394b59; margin-top: 5px; }
+
+        .loading-bar {
+            height: 4px;
+            width: 100%;
+            background: #394b59;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            left: -50%;
+            height: 100%;
+            width: 50%;
+            background: var(--accent-blue);
+            animation: load 1s infinite;
+        }
+
+        @keyframes load {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        /* Tooltip style helper */
+        .instruction {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body>
 
-    <header class="h-20 border-b border-slate-700 bg-slate-900 flex items-center justify-between px-8 z-20">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <i data-lucide="activity" class="text-white"></i>
+    <div class="top-bar">
+        <div class="logo">PALANTIR <span>FOUNDRY</span></div>
+        <div class="kpi-container">
+            <div class="kpi">
+                <div class="kpi-label">Active Orders</div>
+                <div class="kpi-value">14,205</div>
             </div>
-            <div>
-                <h1 class="text-xl font-bold tracking-wide text-white">Allied <span class="text-blue-400 font-light">Brain</span></h1>
-                <div class="text-xs text-slate-400">Operational Command Center</div>
+            <div class="kpi">
+                <div class="kpi-label">Revenue at Risk</div>
+                <div class="kpi-value alert" id="rev-risk">$4.2M</div>
             </div>
-        </div>
-
-        <div class="flex gap-8">
-            <div class="text-center">
-                <div class="text-xs text-slate-500 uppercase tracking-wider">חיסכון מצטבר (Q1)</div>
-                <div class="text-2xl font-bold text-green-400 glow-text" id="total-savings">₪4,250,000</div>
-            </div>
-            <div class="text-center border-r border-slate-700 pr-8">
-                <div class="text-xs text-slate-500 uppercase tracking-wider">החלטות אוטונומיות</div>
-                <div class="text-2xl font-bold text-white">12,405</div>
-            </div>
-            <div class="text-center border-r border-slate-700 pr-8">
-                <div class="text-xs text-slate-500 uppercase tracking-wider">חריגים פתוחים</div>
-                <div class="text-2xl font-bold text-red-500 animate-pulse">3</div>
+            <div class="kpi">
+                <div class="kpi-label">On-Time Delivery</div>
+                <div class="kpi-value" id="otd-score">92%</div>
             </div>
         </div>
-
-        <div class="flex items-center gap-3">
-            <div class="text-right">
-                <div class="text-sm font-bold">מנכ"ל הקבוצה</div>
-                <div class="text-xs text-slate-400">Admin Access</div>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-slate-700 border border-slate-500 overflow-hidden">
-                <img src="https://ui-avatars.com/api/?name=CEO&background=random" alt="Avatar">
-            </div>
-        </div>
-    </header>
-
-    <div class="flex-1 flex overflow-hidden">
-        
-        <div class="w-72 bg-slate-900 border-l border-slate-800 flex flex-col p-4 gap-4">
-            <div class="text-xs font-bold text-slate-500 uppercase px-2">חברות הפורטפוליו</div>
-            
-            <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-yellow-600 transition group">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-yellow-500">UPS Israel</span>
-                    <span class="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full">1 חריג</span>
-                </div>
-                <div class="text-xs text-slate-400 group-hover:text-white transition">צוואר בקבוק במכס נתב"ג</div>
-                <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
-                    <div class="bg-yellow-600 h-full w-3/4"></div>
-                </div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-blue-600 transition group">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-blue-400">Champion Motors</span>
-                    <span class="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full">2 חריגים</span>
-                </div>
-                <div class="text-xs text-slate-400 group-hover:text-white transition">חריגות הטסת חלפים (גרמניה)</div>
-                <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
-                    <div class="bg-blue-600 h-full w-1/2"></div>
-                </div>
-            </div>
-
-             <div class="p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800 cursor-pointer border-r-2 border-purple-600 transition group opacity-60">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-purple-400">Newpan</span>
-                    <span class="text-green-400 text-xs">✔ הכל תקין</span>
-                </div>
-                <div class="text-xs text-slate-400">אין חריגות שירות</div>
-            </div>
-        </div>
-
-        <div class="flex-1 bg-slate-950 p-8 overflow-y-auto relative">
-            
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                    <i data-lucide="zap" class="text-yellow-400"></i>
-                    זרם החלטות חי (Live Decision Stream)
-                </h2>
-
-                <div id="card-champion" class="glass-panel rounded-2xl p-6 mb-6 animate-fade-in relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-1 h-full bg-blue-600"></div>
-                    
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-blue-900/50 p-2 rounded-lg text-blue-400">
-                                <i data-lucide="plane"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">בקשת הטסה דחופה: מנוע TSI 2.0</h3>
-                                <div class="text-sm text-slate-400 flex items-center gap-2">
-                                    <span>Champion Motors</span> • <span>מוסך "המרכז"</span> • <span>לפני 12 דקות</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold text-white">€850</div>
-                            <div class="text-xs text-red-400">עלות הטסה משוערת</div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700">
-                        <div class="text-xs font-bold text-slate-500 uppercase mb-2">ניתוח המערכת</div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="flex items-center gap-2 text-sm text-red-300">
-                                <i data-lucide="x-circle" class="w-4 h-4"></i>
-                                רכב אינו מושבת (נוסע)
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-green-400">
-                                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                                קיים במלאי ימי (מגיע בעוד 3 ימים)
-                            </div>
-                            <div class="flex items-center gap-2 text-sm text-slate-300 col-span-2">
-                                <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
-                                לקוח פרטי (לא ציי רכב) - אין התחייבות SLA להטסה
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <button onclick="resolveIssue('card-champion', 3200)" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-bold shadow-lg shadow-blue-900/20 transition flex items-center justify-center gap-2">
-                            <span>חסוך עלות וספק ממלאי ימי</span>
-                            <span class="bg-white/20 text-xs px-2 py-0.5 rounded">חיסכון: ₪3,200</span>
-                        </button>
-                        <button class="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-800 text-slate-300">
-                            אשר הטסה בכל זאת
-                        </button>
-                    </div>
-                </div>
-
-
-                <div id="card-ups" class="glass-panel rounded-2xl p-6 mb-6 animate-fade-in relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-1 h-full bg-yellow-600"></div>
-                    
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-yellow-900/30 p-2 rounded-lg text-yellow-500">
-                                <i data-lucide="package"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg">חסימת מכס: משלוח אלקטרוניקה</h3>
-                                <div class="text-sm text-slate-400 flex items-center gap-2">
-                                    <span>UPS Israel</span> • <span>מסוף נתב"ג</span> • <span>לפני 4 דקות</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold text-white">48h</div>
-                            <div class="text-xs text-red-400">עיכוב צפוי ללא התערבות</div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700">
-                        <div class="text-xs font-bold text-slate-500 uppercase mb-2">המלצת עמיל מכס וירטואלי</div>
-                        <p class="text-sm text-slate-300 mb-2">זוהתה אי התאמה בסיווג (H.S Code). המערכת איתרה סיווג היסטורי תקין עבור יבואן זה.</p>
-                        <div class="flex items-center gap-2 bg-green-900/20 p-2 rounded border border-green-900/50 text-green-400 text-sm font-mono">
-                            <i data-lucide="arrow-right"></i> שנה סיווג ל-8517.62 (פטור ממכס)
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <button onclick="resolveIssue('card-ups', 0)" class="flex-1 bg-yellow-600 hover:bg-yellow-500 text-white py-3 rounded-lg font-bold shadow-lg shadow-yellow-900/20 transition flex items-center justify-center gap-2">
-                            <span>תקן סיווג ושחרר אוטומטית</span>
-                        </button>
-                        <button class="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-800 text-slate-300">
-                            פתח לבדיקה ידנית
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
+        <div style="font-size: 0.8rem; color: #a7b6c2;">User: COO_Admin</div>
     </div>
 
-    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 opacity-0 transition-opacity duration-500 pointer-events-none">
-        <i data-lucide="check-circle"></i>
-        <span class="font-bold">החיסכון עודכן בהצלחה! הפקודה נשלחה ל-ERP.</span>
+    <div class="main-container">
+        
+        <div class="ontology-view" id="graph-area">
+            <div class="grid-lines"></div>
+
+            <svg>
+                <line x1="18%" y1="45%" x2="40%" y2="25%" class="problem-route" id="line-munich-in" />
+                <line x1="50%" y1="25%" x2="70%" y2="45%" class="problem-route" id="line-munich-out" />
+                
+                <line x1="18%" y1="45%" x2="40%" y2="65%" id="line-poland-in" />
+                <line x1="50%" y1="65%" x2="70%" y2="45%" id="line-poland-out" />
+            </svg>
+
+            <div class="node supplier">
+                <h4>Bosch Supplier</h4>
+                <p>Component: Chips</p>
+                <span class="status-badge bg-blue">On Time</span>
+            </div>
+
+            <div class="node factory-1" onclick="openPanel()">
+                <h4>Munich Plant</h4>
+                <p>Status: Critical Fail</p>
+                <span class="status-badge bg-red" id="munich-badge">Delayed +72h</span>
+                <div style="font-size: 18px; position: absolute; top: -10px; right: -10px;">🔴</div>
+            </div>
+
+            <div class="node factory-2" id="poland-node">
+                <h4>Poland Plant</h4>
+                <p>Capacity: 85% Free</p>
+                <span class="status-badge bg-green">Ready</span>
+            </div>
+
+            <div class="node customer">
+                <h4>BMW Group</h4>
+                <p>Order #9901</p>
+                <span class="status-badge bg-red" id="customer-badge">Risk High</span>
+            </div>
+
+            <div class="instruction">
+                לחץ על המפעל במינכן (Munich Plant) כדי לראות את ה-AIP בפעולה
+            </div>
+        </div>
+
+        <div class="side-panel" id="side-panel">
+            <div class="panel-header">
+                <div class="ai-icon"></div>
+                <h3>AIP Co-Pilot</h3>
+                <div style="margin-right: auto; cursor: pointer;" onclick="closePanel()">✕</div>
+            </div>
+            
+            <div class="panel-content">
+                <div class="chat-bubble alert-bubble">
+                    <strong>Alert Detected:</strong> Munich Plant reporting machine failure (IoT Sensor #4).<br><br>
+                    <strong>Impact:</strong> Order #9901 for BMW will be delayed by 3 days.
+                </div>
+
+                <div class="chat-bubble">
+                    <strong>Contract Analysis:</strong> A delay >24h triggers a $50,000 penalty clause.
+                </div>
+
+                <div id="simulation-step" style="display: block;">
+                    <h4>Recommended Actions</h4>
+                    <div class="action-card">
+                        <div style="font-size: 0.9rem; margin-bottom: 10px;">
+                            <strong>Strategy: Re-route to Poland</strong><br>
+                            <span style="color: var(--accent-green)">+ Net Saving: $38,000</span>
+                        </div>
+                        <ul style="font-size: 0.8rem; padding-right: 20px; color: var(--text-muted);">
+                            <li>Poland plant has capacity</li>
+                            <li>Material transport cost: $12k</li>
+                            <li>Avoids $50k penalty</li>
+                        </ul>
+                        <button class="btn" onclick="runSimulation()">Simulate & Execute</button>
+                    </div>
+                </div>
+
+                <div id="execution-step" style="display: none;">
+                    <p>Executing Write-back across systems...</p>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                        > Updating SAP Production Plan...<br>
+                        > Creating Logistics Order (FedEx)...<br>
+                        > Emailing BMW Account Manager...
+                    </div>
+                    <div class="loading-bar" style="display: block;"></div>
+                </div>
+
+                <div id="success-step" style="display: none; margin-top: 20px;">
+                    <div class="chat-bubble" style="border-left-color: var(--accent-green); background: rgba(15, 153, 96, 0.1);">
+                        <strong>✅ Issue Resolved</strong><br>
+                        Production shifted to Poland. BMW notified.
+                    </div>
+                    <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">
+                        System updated at 14:32 PM
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+        function openPanel() {
+            document.getElementById('side-panel').classList.add('open');
+        }
 
-        // Logic to simulate solving an issue
-        function resolveIssue(cardId, amountSaved) {
-            const card = document.getElementById(cardId);
-            
-            // 1. Animate card away
-            card.style.transform = 'scale(0.95)';
-            card.style.opacity = '0';
-            
+        function closePanel() {
+            document.getElementById('side-panel').classList.remove('open');
+        }
+
+        function runSimulation() {
+            // 1. Hide options, show loading
+            document.getElementById('simulation-step').style.display = 'none';
+            document.getElementById('execution-step').style.display = 'block';
+
+            // 2. Wait 2 seconds to simulate "Thinking/Writing"
             setTimeout(() => {
-                card.style.display = 'none';
-                
-                // 2. Update Total Savings Counter
-                if(amountSaved > 0) {
-                    const savingsElement = document.getElementById('total-savings');
-                    let currentSavings = parseInt(savingsElement.innerText.replace(/\D/g,''));
-                    let newSavings = currentSavings + amountSaved;
-                    savingsElement.innerText = '₪' + newSavings.toLocaleString();
-                    savingsElement.classList.add('scale-110'); // Pulse effect
-                    setTimeout(() => savingsElement.classList.remove('scale-110'), 200);
-                }
+                finishExecution();
+            }, 2500);
+        }
 
-                // 3. Show Toast Notification
-                const toast = document.getElementById('toast');
-                toast.classList.remove('opacity-0');
-                setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        function finishExecution() {
+            // Update Side Panel
+            document.getElementById('execution-step').style.display = 'none';
+            document.getElementById('success-step').style.display = 'block';
 
-            }, 300);
+            // Update Visual Graph (The Ontology)
+            
+            // Turn Munich Gray (Inactive path)
+            const munich = document.querySelector('.factory-1');
+            munich.style.opacity = '0.5';
+            munich.style.boxShadow = 'none';
+            munich.style.borderColor = '#30404d';
+            document.getElementById('munich-badge').innerText = "Halted";
+            document.getElementById('munich-badge').className = "status-badge"; // grey
+
+            // Turn Poland Active
+            const poland = document.getElementById('poland-node');
+            poland.classList.add('active');
+            
+            // Update Lines
+            document.getElementById('line-munich-in').style.opacity = '0.1';
+            document.getElementById('line-munich-out').style.opacity = '0.1';
+            
+            document.getElementById('line-poland-in').classList.add('active-route');
+            document.getElementById('line-poland-out').classList.add('active-route');
+
+            // Update Customer Status
+            document.getElementById('customer-badge').className = "status-badge bg-green";
+            document.getElementById('customer-badge').innerText = "On Time";
+
+            // Update Top KPIs
+            const revRisk = document.getElementById('rev-risk');
+            revRisk.innerText = "$0";
+            revRisk.classList.remove('alert');
+            revRisk.classList.add('good');
+            revRisk.style.animation = 'none';
+
+            document.getElementById('otd-score').innerText = "98%";
+            document.getElementById('otd-score').classList.add('good');
         }
     </script>
 </body>
