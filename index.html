@@ -2,213 +2,116 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Palantir Foundry Simulation - Supply Chain</title>
+    <title>Champion Motors - VOR Command Center</title>
     <style>
         :root {
-            --bg-dark: #10161a;
-            --panel-bg: #202b33;
-            --text-main: #f5f8fa;
-            --text-muted: #a7b6c2;
-            --accent-blue: #2B95D6;
-            --accent-red: #D13913;
-            --accent-green: #0F9960;
-            --border: #30404d;
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: 'Consolas', monospace;
+            --bg-color: #0f1115;
+            --panel-color: #1a1d24;
+            --text-primary: #e0e0e0;
+            --text-secondary: #8a9ba8;
+            --champion-red: #cc0000; /* Champion/Audi Red */
+            --highlight-blue: #00a8e8;
+            --success-green: #00c853;
+            --border-color: #303642;
+            --font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-family);
             height: 100vh;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Top Navigation Bar */
-        .top-bar {
+        /* Header */
+        header {
             height: 60px;
-            background-color: var(--panel-bg);
-            border-bottom: 1px solid var(--border);
+            background-color: var(--panel-color);
+            border-bottom: 2px solid var(--champion-red);
             display: flex;
             align-items: center;
             padding: 0 20px;
             justify-content: space-between;
         }
 
-        .logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-        .logo span { color: var(--text-muted); font-weight: normal; font-size: 0.9rem;}
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: #fff; }
+        .logo span { color: var(--champion-red); }
 
-        .kpi-container {
+        /* KPI Bar */
+        .kpi-bar {
             display: flex;
-            gap: 30px;
+            justify-content: space-around;
+            padding: 15px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .kpi {
-            text-align: center;
+        .kpi-box { text-align: center; }
+        .kpi-title { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; }
+        .kpi-value { font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+        .text-red { color: #ff4d4d; animation: pulse 2s infinite; }
+        
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.7;} 100% {opacity: 1;} }
+
+        /* Main Layout */
+        .workspace {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
         }
 
-        .kpi-label {
+        /* Map Section */
+        .map-section {
+            flex: 2;
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+            background-image: radial-gradient(circle at 50% 50%, #252a33 0%, #1a1d24 100%);
+        }
+        
+        /* Interactive Nodes on Map */
+        .map-node {
+            position: absolute;
+            width: 14px; height: 14px;
+            background: #555;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+        }
+        .map-node:hover { transform: scale(1.5); }
+        .map-node.alert { background: var(--champion-red); box-shadow: 0 0 15px var(--champion-red); }
+        
+        .map-label {
+            position: absolute;
+            color: var(--text-secondary);
             font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transform: translate(-50%, 20px);
+            white-space: nowrap;
         }
 
-        .kpi-value {
-            font-family: var(--font-mono);
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .kpi-value.alert { color: var(--accent-red); animation: pulse-text 2s infinite; }
-        .kpi-value.good { color: var(--accent-green); }
-
-        /* Main Content Layout */
-        .main-container {
+        /* Detail/Action Panel */
+        .action-panel {
+            flex: 1;
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             display: flex;
-            flex: 1;
-            position: relative;
-        }
-
-        /* Map / Ontology View */
-        .ontology-view {
-            flex: 1;
-            position: relative;
-            background: radial-gradient(circle at center, #1b262e 0%, #10161a 100%);
+            flex-direction: column;
             overflow: hidden;
         }
 
-        .grid-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-        }
-
-        /* Nodes */
-        .node {
-            position: absolute;
-            width: 140px;
-            background: var(--panel-bg);
-            border: 1px solid var(--accent-blue);
-            border-radius: 4px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-
-        .node:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(43, 149, 214, 0.4); }
-        .node h4 { margin: 0 0 5px 0; font-size: 0.9rem; }
-        .node p { margin: 0; font-size: 0.75rem; color: var(--text-muted); }
-
-        .node.supplier { top: 40%; left: 10%; border-color: var(--text-muted); }
-        
-        .node.factory-1 { top: 20%; left: 40%; border-color: var(--accent-red); box-shadow: 0 0 20px rgba(209, 57, 19, 0.4); }
-        .node.factory-1.fixed { border-color: var(--accent-green); box-shadow: none; }
-        
-        .node.factory-2 { top: 60%; left: 40%; border-color: var(--text-muted); opacity: 0.6; }
-        .node.factory-2.active { border-color: var(--accent-blue); opacity: 1; box-shadow: 0 0 20px rgba(43, 149, 214, 0.4); }
-
-        .node.customer { top: 40%; left: 70%; border-color: var(--text-muted); }
-
-        /* Status Badge on Node */
-        .status-badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 10px;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        .bg-red { background: rgba(209, 57, 19, 0.2); color: var(--accent-red); }
-        .bg-green { background: rgba(15, 153, 96, 0.2); color: var(--accent-green); }
-        .bg-blue { background: rgba(43, 149, 214, 0.2); color: var(--accent-blue); }
-
-        /* Connections (SVG) */
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        line {
-            stroke: var(--text-muted);
-            stroke-width: 2;
-            opacity: 0.3;
-        }
-        line.active-route {
-            stroke: var(--accent-blue);
-            stroke-width: 3;
-            opacity: 0.8;
-            stroke-dasharray: 10;
-            animation: dash 1s linear infinite;
-        }
-        line.problem-route {
-            stroke: var(--accent-red);
-            opacity: 0.8;
-        }
-
-        @keyframes dash {
-            to { stroke-dashoffset: -20; }
-        }
-        
-        @keyframes pulse-text {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
-        /* Side Panel (AIP) */
-        .side-panel {
-            width: 350px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            transform: translateX(100%); /* Hidden by default */
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            z-index: 20;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
-        }
-
-        .side-panel.open {
-            transform: translateX(0);
-        }
-
         .panel-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .ai-icon {
-            width: 20px; height: 20px;
-            background: linear-gradient(135deg, #2B95D6, #9D2BD6);
-            border-radius: 50%;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
         }
 
         .panel-content {
@@ -217,263 +120,182 @@
             overflow-y: auto;
         }
 
-        .chat-bubble {
-            background: #293742;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            border-left: 3px solid var(--accent-blue);
-        }
-        
-        .chat-bubble.alert-bubble {
-            border-left: 3px solid var(--accent-red);
-            background: rgba(209, 57, 19, 0.1);
+        .ticket-card {
+            background: #232730;
+            border-left: 4px solid var(--champion-red);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
         }
 
-        .action-card {
-            background: #182026;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .label { color: var(--text-secondary); }
+        .val { font-weight: bold; font-family: monospace; }
+
+        /* AIP Section */
+        .aip-suggestion {
+            background: linear-gradient(135deg, rgba(0, 168, 232, 0.1), rgba(0, 0, 0, 0));
+            border: 1px solid var(--highlight-blue);
             padding: 15px;
-            margin-top: 20px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none; /* Hidden initially */
         }
 
         .btn {
-            background: var(--accent-blue);
+            background: var(--highlight-blue);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 3px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            width: 100%;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #008ec5; }
+
+        .loader {
+            height: 4px; width: 0%; background: var(--success-green);
+            transition: width 2s ease-in-out;
             margin-top: 10px;
-            transition: background 0.2s;
         }
-        .btn:hover { background: #2382bd; }
-        .btn.secondary { background: #394b59; margin-top: 5px; }
-
-        .loading-bar {
-            height: 4px;
-            width: 100%;
-            background: #394b59;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-            display: none;
-        }
-        .loading-bar::after {
-            content: '';
-            position: absolute;
-            left: -50%;
-            height: 100%;
-            width: 50%;
-            background: var(--accent-blue);
-            animation: load 1s infinite;
-        }
-
-        @keyframes load {
-            0% { left: -50%; }
-            100% { left: 100%; }
-        }
-
-        /* Tooltip style helper */
-        .instruction {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            padding: 10px 20px;
-            border-radius: 20px;
-            pointer-events: none;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <div class="logo">PALANTIR <span>FOUNDRY</span></div>
-        <div class="kpi-container">
-            <div class="kpi">
-                <div class="kpi-label">Active Orders</div>
-                <div class="kpi-value">14,205</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-label">Revenue at Risk</div>
-                <div class="kpi-value alert" id="rev-risk">$4.2M</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-label">On-Time Delivery</div>
-                <div class="kpi-value" id="otd-score">92%</div>
-            </div>
-        </div>
-        <div style="font-size: 0.8rem; color: #a7b6c2;">User: COO_Admin</div>
-    </div>
+<header>
+    <div class="logo">CHAMPION <span>MOTORS</span> | OS</div>
+    <div style="font-size: 0.8rem; color: #888;">System: Connected Supply Chain (Live)</div>
+</header>
 
-    <div class="main-container">
+<div class="kpi-bar">
+    <div class="kpi-box">
+        <div class="kpi-title">רכבים בטיפול (Nationwide)</div>
+        <div class="kpi-value">1,240</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">VOR (רכבים מושבתים > 48 שעות)</div>
+        <div class="kpi-value text-red" id="vor-count">14</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">ערך חלפים חסרים</div>
+        <div class="kpi-value">₪840k</div>
+    </div>
+</div>
+
+<div class="workspace">
+    <div class="map-section" id="map">
+        <div class="map-node alert" style="top: 45%; left: 40%;" onclick="openTicket()">
+            <div class="map-label">מוסך מרכזי (בני ברק)</div>
+        </div>
         
-        <div class="ontology-view" id="graph-area">
-            <div class="grid-lines"></div>
-
-            <svg>
-                <line x1="18%" y1="45%" x2="40%" y2="25%" class="problem-route" id="line-munich-in" />
-                <line x1="50%" y1="25%" x2="70%" y2="45%" class="problem-route" id="line-munich-out" />
-                
-                <line x1="18%" y1="45%" x2="40%" y2="65%" id="line-poland-in" />
-                <line x1="50%" y1="65%" x2="70%" y2="45%" id="line-poland-out" />
-            </svg>
-
-            <div class="node supplier">
-                <h4>Bosch Supplier</h4>
-                <p>Component: Chips</p>
-                <span class="status-badge bg-blue">On Time</span>
-            </div>
-
-            <div class="node factory-1" onclick="openPanel()">
-                <h4>Munich Plant</h4>
-                <p>Status: Critical Fail</p>
-                <span class="status-badge bg-red" id="munich-badge">Delayed +72h</span>
-                <div style="font-size: 18px; position: absolute; top: -10px; right: -10px;">🔴</div>
-            </div>
-
-            <div class="node factory-2" id="poland-node">
-                <h4>Poland Plant</h4>
-                <p>Capacity: 85% Free</p>
-                <span class="status-badge bg-green">Ready</span>
-            </div>
-
-            <div class="node customer">
-                <h4>BMW Group</h4>
-                <p>Order #9901</p>
-                <span class="status-badge bg-red" id="customer-badge">Risk High</span>
-            </div>
-
-            <div class="instruction">
-                לחץ על המפעל במינכן (Munich Plant) כדי לראות את ה-AIP בפעולה
-            </div>
+        <div class="map-node" style="top: 25%; left: 45%; background: #00c853;">
+            <div class="map-label">מחסן צפון (חיפה)</div>
+        </div>
+        
+        <div class="map-node" style="top: 50%; left: 50%;">
+             <div class="map-label">מוסך ירושלים</div>
         </div>
 
-        <div class="side-panel" id="side-panel">
-            <div class="panel-header">
-                <div class="ai-icon"></div>
-                <h3>AIP Co-Pilot</h3>
-                <div style="margin-right: auto; cursor: pointer;" onclick="closePanel()">✕</div>
-            </div>
-            
-            <div class="panel-content">
-                <div class="chat-bubble alert-bubble">
-                    <strong>Alert Detected:</strong> Munich Plant reporting machine failure (IoT Sensor #4).<br><br>
-                    <strong>Impact:</strong> Order #9901 for BMW will be delayed by 3 days.
-                </div>
-
-                <div class="chat-bubble">
-                    <strong>Contract Analysis:</strong> A delay >24h triggers a $50,000 penalty clause.
-                </div>
-
-                <div id="simulation-step" style="display: block;">
-                    <h4>Recommended Actions</h4>
-                    <div class="action-card">
-                        <div style="font-size: 0.9rem; margin-bottom: 10px;">
-                            <strong>Strategy: Re-route to Poland</strong><br>
-                            <span style="color: var(--accent-green)">+ Net Saving: $38,000</span>
-                        </div>
-                        <ul style="font-size: 0.8rem; padding-right: 20px; color: var(--text-muted);">
-                            <li>Poland plant has capacity</li>
-                            <li>Material transport cost: $12k</li>
-                            <li>Avoids $50k penalty</li>
-                        </ul>
-                        <button class="btn" onclick="runSimulation()">Simulate & Execute</button>
-                    </div>
-                </div>
-
-                <div id="execution-step" style="display: none;">
-                    <p>Executing Write-back across systems...</p>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">
-                        > Updating SAP Production Plan...<br>
-                        > Creating Logistics Order (FedEx)...<br>
-                        > Emailing BMW Account Manager...
-                    </div>
-                    <div class="loading-bar" style="display: block;"></div>
-                </div>
-
-                <div id="success-step" style="display: none; margin-top: 20px;">
-                    <div class="chat-bubble" style="border-left-color: var(--accent-green); background: rgba(15, 153, 96, 0.1);">
-                        <strong>✅ Issue Resolved</strong><br>
-                        Production shifted to Poland. BMW notified.
-                    </div>
-                    <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">
-                        System updated at 14:32 PM
-                    </div>
-                </div>
-
-            </div>
+        <div style="position: absolute; bottom: 20px; right: 20px; color: #555; font-size: 0.8rem;">
+            *Visualizing Priority ERP + WMS Data
         </div>
-
     </div>
 
-    <script>
-        function openPanel() {
-            document.getElementById('side-panel').classList.add('open');
-        }
+    <div class="action-panel">
+        <div class="panel-header">Incident Details</div>
+        <div class="panel-content" id="panel-content">
+            <div style="text-align: center; color: #666; margin-top: 50px;">
+                בחר נקודה אדומה במפה לפרטים
+            </div>
+        </div>
+    </div>
+</div>
 
-        function closePanel() {
-            document.getElementById('side-panel').classList.remove('open');
-        }
+<script>
+    function openTicket() {
+        const panel = document.getElementById('panel-content');
+        panel.innerHTML = `
+            <div class="ticket-card">
+                <div style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">🔴 VOR ALERT: 72 Hours</div>
+                <div class="data-row"><span class="label">Car Model:</span> <span class="val">Audi e-tron GT</span></div>
+                <div class="data-row"><span class="label">License:</span> <span class="val">33-452-11</span></div>
+                <div class="data-row"><span class="label">Customer:</span> <span class="val">VIP (Corporate)</span></div>
+                <hr style="border-color: #444; opacity: 0.3;">
+                <div class="data-row"><span class="label">Missing Part:</span> <span class="val">HV Battery Controller</span></div>
+                <div class="data-row"><span class="label">SKU:</span> <span class="val">4KE-915-105</span></div>
+                <div class="data-row"><span class="label">ERP Status:</span> <span class="val" style="color:red">OUT OF STOCK</span></div>
+            </div>
 
-        function runSimulation() {
-            // 1. Hide options, show loading
-            document.getElementById('simulation-step').style.display = 'none';
-            document.getElementById('execution-step').style.display = 'block';
+            <div id="ai-section" style="opacity: 0; transition: opacity 1s;">
+                <div style="font-size: 0.8rem; color: #00a8e8; margin-bottom: 5px;">🤖 AI Analysis Running...</div>
+                <div class="aip-suggestion" style="display: block;">
+                    <strong>Insight Found:</strong>
+                    <p style="font-size: 0.9rem; color: #ccc;">
+                        חלק זהה (SKU 4KE-915-105) אותר במחסן חיפה.
+                        <br>
+                        הסטטוס שלו כרגע: <em>"Reserved for Stock Replenishment"</em> (Low Priority).
+                    </p>
+                    <div style="background: rgba(0,0,0,0.3); padding: 8px; font-size: 0.8rem; border-left: 2px solid #00a8e8;">
+                        <strong>Recommendation:</strong> Re-allocate part from Haifa -> Bnei Brak immediately.
+                    </div>
+                </div>
+                <button class="btn" onclick="executeFix()">🚀 Execute Transfer</button>
+                <div class="loader" id="loader"></div>
+            </div>
+        `;
 
-            // 2. Wait 2 seconds to simulate "Thinking/Writing"
-            setTimeout(() => {
-                finishExecution();
-            }, 2500);
-        }
+        // Simple animation to show "thinking"
+        setTimeout(() => {
+            document.getElementById('ai-section').style.opacity = '1';
+        }, 500);
+    }
 
-        function finishExecution() {
-            // Update Side Panel
-            document.getElementById('execution-step').style.display = 'none';
-            document.getElementById('success-step').style.display = 'block';
+    function executeFix() {
+        const btn = document.querySelector('.btn');
+        btn.innerHTML = "Processing...";
+        btn.style.background = "#444";
+        
+        document.getElementById('loader').style.width = "100%";
 
-            // Update Visual Graph (The Ontology)
+        setTimeout(() => {
+            const panel = document.getElementById('panel-content');
+            panel.innerHTML = `
+                <div style="text-align: center; margin-top: 40px;">
+                    <div style="font-size: 3rem;">✅</div>
+                    <h2>Problem Solved</h2>
+                    <p style="color: #aaa;">
+                        1. Priority ERP Updated (Transfer Order Created).<br>
+                        2. Courier Notified (Pick up from Haifa).<br>
+                        3. Service Advisor Notified via SMS.
+                    </p>
+                    <div style="color: #00c853; font-weight: bold; margin-top: 20px;">
+                        Estimated Arrival: Today, 16:30
+                    </div>
+                </div>
+            `;
             
-            // Turn Munich Gray (Inactive path)
-            const munich = document.querySelector('.factory-1');
-            munich.style.opacity = '0.5';
-            munich.style.boxShadow = 'none';
-            munich.style.borderColor = '#30404d';
-            document.getElementById('munich-badge').innerText = "Halted";
-            document.getElementById('munich-badge').className = "status-badge"; // grey
-
-            // Turn Poland Active
-            const poland = document.getElementById('poland-node');
-            poland.classList.add('active');
+            // Update Top KPI
+            const kpi = document.getElementById('vor-count');
+            kpi.innerText = "13"; // reduced by 1
+            kpi.classList.remove('text-red');
+            kpi.style.color = "#00c853";
             
-            // Update Lines
-            document.getElementById('line-munich-in').style.opacity = '0.1';
-            document.getElementById('line-munich-out').style.opacity = '0.1';
+            // Remove alert from map
+            document.querySelector('.map-node.alert').classList.remove('alert');
+            document.querySelector('.map-node.alert').style.background = "#555";
             
-            document.getElementById('line-poland-in').classList.add('active-route');
-            document.getElementById('line-poland-out').classList.add('active-route');
+        }, 2000);
+    }
+</script>
 
-            // Update Customer Status
-            document.getElementById('customer-badge').className = "status-badge bg-green";
-            document.getElementById('customer-badge').innerText = "On Time";
-
-            // Update Top KPIs
-            const revRisk = document.getElementById('rev-risk');
-            revRisk.innerText = "$0";
-            revRisk.classList.remove('alert');
-            revRisk.classList.add('good');
-            revRisk.style.animation = 'none';
-
-            document.getElementById('otd-score').innerText = "98%";
-            document.getElementById('otd-score').classList.add('good');
-        }
-    </script>
 </body>
 </html>
